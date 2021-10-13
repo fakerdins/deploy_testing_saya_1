@@ -5,3 +5,4 @@ django-model-utils==4.1.1
 pygments
 Pillow
 django-filter
+drf-yasg
