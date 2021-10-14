@@ -6,3 +6,6 @@ pygments
 Pillow
 django-filter
 drf-yasg
+beautifulsoup4
+requests
+lxml

@@ -18,16 +18,10 @@ class RatingSerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
 
     class Meta:
         model = Image
-        fields = ('id', 'image', 'post', )
-
-    def get_image(self, data):
-        request = self.context.get('request')
-        image = data.image.url
-        return request.build_absolute_uri(image)
+        fields = '__all__'
 
 
 class LikeSerializer(serializers.ModelSerializer):
@@ -65,19 +59,22 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.email')
-    image = ImageSerializer(many=True, read_only=True)
+    images = ImageSerializer(many=True, read_only=True)
     likes = LikeSerializer(many=True, read_only=True)
     rating = RatingSerializer(many=True, required=False)
     comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'author', 'text', 'likes', 'rating', 'created_at', 'comments', 'image')
+        fields = ('id', 'title', 'author', 'text', 'likes', 'rating', 'created_at', 'comments', 'images')
 
     def create(self, validated_data):
         request = self.context.get('request')
+        image_list = request.FILES
         author = request.user
         post = Post.objects.create(author=author, **validated_data)
+        for image in image_list.getlist('images'):
+            Image.objects.create(post=post, image=image)
         return post
 
     def to_representation(self, instance):
