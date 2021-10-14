@@ -12,6 +12,9 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from main.views import PostFavouriteView, ParsingView
+
+
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -39,4 +42,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(router.urls)),
     path('api/v1/account/', include('account.urls')),
+    path('api/v1/favourites/', PostFavouriteView.as_view()),
+    path('api/v1/news/', ParsingView.as_view()),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
