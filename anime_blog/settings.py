@@ -30,12 +30,16 @@ INSTALLED_APPS = [
     # apps
     'main',
     'account',
+    'oauth2_provider',
+    'social_django',
 
     # libs
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
     'drf_yasg',
+    'rest_framework_social_oauth2',
+
 ]
 
 MIDDLEWARE = [
@@ -68,10 +72,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'anime_blog.wsgi.application'
 
+SOCIAL_AUTH_VK_OAUTH2_KEY = '7976031'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'cYtb7fVlgX9D1eA1TNGn'
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+
 REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
 
     # 'DEFAULT_PERMISSION_CLASSES': (
@@ -86,7 +102,7 @@ REST_FRAMEWORK = {
 }
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

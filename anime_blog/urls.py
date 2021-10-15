@@ -44,4 +44,5 @@ urlpatterns = [
     path('api/v1/account/', include('account.urls')),
     path('api/v1/favourites/', PostFavouriteView.as_view()),
     path('api/v1/news/', ParsingView.as_view()),
+    path('auth/', include('rest_framework_social_oauth2.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
