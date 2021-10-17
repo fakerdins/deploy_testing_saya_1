@@ -26,16 +26,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # apps
     'main',
     'account',
+    'oauth2_provider',
+    'social_django',
 
     # libs
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
     'drf_yasg',
+    'rest_framework_social_oauth2',
+
 ]
 
 MIDDLEWARE = [
@@ -68,10 +73,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'anime_blog.wsgi.application'
 
+SOCIAL_AUTH_VK_OAUTH2_KEY = '7976031'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'cYtb7fVlgX9D1eA1TNGn'
+SOCIAL_AUTH_GITHUB_KEY = 'b6ac4109d6e572f4d8f0'
+SOCIAL_AUTH_GITHUB_SECRET = 'd5fffd84b000e635435a24c3a711c12479497029'
+
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',
+    'social_core.backends.github.GithubOAuth2',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+
 REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
 
     # 'DEFAULT_PERMISSION_CLASSES': (
@@ -86,7 +107,7 @@ REST_FRAMEWORK = {
 }
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -149,9 +170,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'account.User'
 
+#smtp
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "kanybek.abay@gmail.com"
 EMAIL_HOST_PASSWORD = '442588abay'
+
+# REDIS
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = '6379'
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+BROKER_URL = "redis://" + REDIS_HOST + ":" + REDIS_PORT + "/0"
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = "redis://" + REDIS_HOST + ":" + REDIS_PORT + "/0"
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

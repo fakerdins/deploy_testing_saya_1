@@ -3,6 +3,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
 
 from main.views import PostViewset, CommentViewset, LikeViewset, RatingViewset
 
@@ -44,4 +45,6 @@ urlpatterns = [
     path('api/v1/account/', include('account.urls')),
     path('api/v1/favourites/', PostFavouriteView.as_view()),
     path('api/v1/news/', ParsingView.as_view()),
+    path('auth/', include('rest_framework_social_oauth2.urls')),
+    url('', include('social_django.urls', namespace='social')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
