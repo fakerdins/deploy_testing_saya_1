@@ -34,7 +34,11 @@ class LikeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         author = request.user
-        liked = Like.objects.create(author=author, **validated_data)
+        post = validated_data.get('post')
+        liked = Like.objects.create(author=author, post=post)
+        liked.likes = True if liked.likes is False else False
+        liked.save()
+
         return liked
 
 

@@ -9,3 +9,12 @@ def send_activation_code(email, activation_code):
         'test@gmail.com',
         [email]
     )
+
+
+def send_beat_mail(email):
+    send_mail(
+        'Mailing subscribe',
+        'You will get message every 10 minutes',
+        'test@gmail.com',
+        [email]
+    )
