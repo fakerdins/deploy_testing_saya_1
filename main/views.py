@@ -1,4 +1,5 @@
-from django_filters import rest_framework as filters
+from typing import Text
+from rest_framework import filters
 from rest_framework import viewsets, status
 from rest_framework import filters as rest_filters
 from rest_framework.permissions import IsAuthenticated
@@ -7,6 +8,7 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework.response import Response
 import csv
 from django.http import HttpResponse
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Post, Image, Comment, Like, Rating
 from .serializers import PostSerializer, ImageSerializer, CommentSerializer, LikeSerializer, RatingSerializer
@@ -27,12 +29,10 @@ class PermissionsMixin:
 
 class PostViewset(PermissionsMixin, viewsets.ModelViewSet):
     queryset = Post.objects.all()
-    filter_backends = [
-        filters.DjangoFilterBackend,
-        rest_filters.SearchFilter
-    ]
-    filterset_fields = ['id', 'likes']
-    search_fields = ['author', 'title', 'text']
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+
+    filterset_fields = ['author']
+    search_fields = ['title', 'text']
 
     serializer_class = PostSerializer
 
